@@ -27,7 +27,7 @@ class MainViewModel: ViewModel() {
     private fun getContent() {
 
         viewModelScope.launch {
-            list = ItemRepository().getSamplePagingSource()
+            list = ItemRepository().getSamplePagingSource().cachedIn(viewModelScope)
         }
     }
 
