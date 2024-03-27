@@ -3,18 +3,19 @@ package com.andcorns2.paging3
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
 
-    private var _list = MutableLiveData<PagingData<ItemData>>()
-    val list: LiveData<PagingData<ItemData>> get() = _list
+    var list: Flow<PagingData<ItemData>> = flowOf(PagingData.empty())
 
     val itemDeleteObserve: MutableLiveData<Unit> = MutableLiveData()
 
@@ -26,11 +27,7 @@ class MainViewModel: ViewModel() {
     private fun getContent() {
 
         viewModelScope.launch {
-            ItemRepository().getSamplePagingSource()
-//                .cachedIn(viewModelScope)
-                .collectLatest { pagingData ->
-                    _list.value = pagingData
-                }
+            list = ItemRepository().getSamplePagingSource()
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.paging.LoadState
 import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andcorns2.paging3.databinding.ActivityMainBinding
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -23,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         setAdapter()
 
-        mainViewModel.list.observe(this@MainActivity) {
-            lifecycleScope.launch {
+        lifecycleScope.launch {
+            mainViewModel.list.collect{
                 itemAdapter.submitData(it)
             }
         }
